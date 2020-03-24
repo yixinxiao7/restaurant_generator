@@ -4,7 +4,7 @@ import random
 
 from dictionaries import states
 
-#assumes csv file exists
+# assumes csv file exists
 
 def select_range(df, lower_range, upper_range):
     return df[df.stars >= lower_range and df.stars <= upper_range]
@@ -16,7 +16,7 @@ def select_location(df, state, city):
 def select_zipCode(df, zipcode):
     return df[df.postal_code == zipcode]
     
-#O(n^2): returns lists of restaurants with any one of the desired categories
+# returns lists of restaurants with any one of the desired categories
 def select_categories(df, categories):
     res_list = set()
     skip = False
@@ -40,7 +40,7 @@ def select_ran_res(df, res_list):
     rand_res = random.choice(res_list)
     return (df.iloc(rand_res)).name
 
-def select_res(df, res_list):
+def show_all_res(df, res_list):
     res_list = np.array(res_list)
     new_df = df.iloc(res_list)
     for name in new_df.name:
@@ -57,6 +57,7 @@ def main():
     bounds = input()
     bounds = bounds.split(",")
     print("Enter a zipcode, if desired. If not, enter 0")
+    zipcode = 0  # default value
     zipcode = input()
     print("Enter food categories, split with commas, no space.")
     categories = input()
@@ -64,16 +65,16 @@ def main():
 
     yelp_business = select_location(yelp_business, state, city)
     yelp_business = select_range(yelp_business, bounds[0], bounds[1])
-    if(zipcode != 0):
+    if zipcode != 0:
         yelp_business = select_zipCode(yelp_business, zipcode)
     yelp_business_array = select_categories(yelp_business, categories)
     
     print("Enter 0 for a random restaurant, and 1 for a list of restaurants")
     choice = input()
-    if(choice == 0):
+    if choice == 0:
         select_ran_res(yelp_business, yelp_business_array)
     else:
-        select_res(yelp_business, yelp_business_array)
+        show_all_res(yelp_business, yelp_business_array)
     
 if __name__ == "__main__":
     main()
