@@ -51,8 +51,7 @@ def show_all_res(df, res_list):
 def main():
 
     # test
-    df = parser.get_business_data()
-    print(df.head())
+    all_data_df, time_data_df = parser.get_business_data()
     exit(1)
     yelp_business = pd.read_csv("./yelp_data/yelp_business.csv")
     
