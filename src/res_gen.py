@@ -2,29 +2,27 @@ import numpy as np
 import pandas as pd
 import random
 
+from dictionaries import states
 import parser
 
-from dictionaries import states
-
-# assumes csv file exists
-
-def select_range(df, lower_range, upper_range):
-    return df[df.stars >= lower_range and df.stars <= upper_range]
 
 def select_location(df, state, city):
     state_acr = states[state]
     return df[df.state == state_acr and df.city == city]
 
-def select_zipCode(df, zipcode):
-    return df[df.postal_code == zipcode]
+def select_range(df, lower_range, upper_range):
+    return df[df.stars >= lower_range and df.stars <= upper_range]
 
-# returns lists of restaurants with any one of the desired categories
+# returns lists of restaurants with any one of the desired categories.
+# TODO: CHANGE THIS TO NOT RETURN INDICES BUT INSTEAD IDS
 def select_categories(df, categories):
     res_list = set()
     skip = False
     res_index = 0
     for cats in df.categories:
-        all_cats = cats.split(";")
+        all_cats = cats.split(",")
+        print(all_cats)
+        exit(1)
         for cat in all_cats:
             for desired_cat in categories: #O(1)
                 if(cat == desired_cat):
@@ -51,10 +49,7 @@ def show_all_res(df, res_list):
 def main():
 
     # test
-    all_data_df, time_data_df = parser.get_business_data()
-    exit(1)
-    yelp_business = pd.read_csv("./yelp_data/yelp_business.csv")
-    
+    all_data_df, time_data_df, category_data_df = parser.get_business_data()
     print("Enter a state, no abbreviations") #fix this
     state = input()
     print("Enter a city")
@@ -62,18 +57,14 @@ def main():
     print("Enter a lower and upper bound for a desired rating of the restaurant, in this format: lower_bound,upper_bound")
     bounds = input()
     bounds = bounds.split(",")
-    print("Enter a zipcode, if desired. If not, enter 0")
-    zipcode = 0  # default value
-    zipcode = input()
     print("Enter food categories, split with commas, no space.")
     categories = input()
     categories = categories.split(",")
 
-    yelp_business = select_location(yelp_business, state, city)
-    yelp_business = select_range(yelp_business, bounds[0], bounds[1])
-    if zipcode != 0:
-        yelp_business = select_zipCode(yelp_business, zipcode)
-    yelp_business_array = select_categories(yelp_business, categories)
+    all_data_df = select_location(all_data_df, state, city)
+    all_data_df = select_range(all_data_df, bounds[0], bounds[1])
+    place_ids = select_categories(category_data_df, categories)
+    # yelp_business_array = select_categories(yelp_business, categories)
     
     print("Enter 0 for a random restaurant, and 1 for a list of restaurants")
     choice = input()

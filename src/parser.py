@@ -11,6 +11,7 @@ def get_business_data():
         i = 0
         all_data = []
         all_hours = []
+        all_categories = []
         row_id = []
         for obj in all_JSON:
             temp_hours = {'Monday': 'x', 'Tuesday': 'x', 'Wednesday': 'x', 'Thursday': 'x', 'Friday': 'x', 'Saturday': 'x', 'Sunday': 'x'}
@@ -24,6 +25,10 @@ def get_business_data():
                 else:  # hours is null in json
                     hours = ['NA','NA','NA','NA','NA','NA','NA']
                 # append all data
+                if isinstance(bus_info['categories'], str):
+                    all_categories.append([bus_info['categories']])  # one column. format: cat1,cat2,cat3
+                else:
+                    all_categories.append(['NA'])
                 all_hours.append(hours)   
                 all_data.append([
                                  bus_info['name'], bus_info['address'], bus_info['city'], 
@@ -43,4 +48,9 @@ def get_business_data():
                                  columns=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
                                  index=row_id
                                 )
-        return all_data, time_data
+        category_data = pd.DataFrame(
+                                 all_categories,
+                                 columns=['categories'],
+                                 index=row_id
+                                )
+        return all_data, time_data, category_data
