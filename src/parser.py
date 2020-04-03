@@ -4,7 +4,6 @@ import pandas as pd
 import parser_helper
 
 # converts json strings to dataframe table
-# TODO: edit so business hours are included
 def get_business_data():
     with open("../data/yelp_academic_dataset_business.json") as f_p:
         all_JSON = f_p.readlines()
@@ -26,9 +25,9 @@ def get_business_data():
                     hours = ['NA','NA','NA','NA','NA','NA','NA']
                 # append all data
                 if isinstance(bus_info['categories'], str):
-                    all_categories.append([bus_info['categories']])  # one column. format: cat1,cat2,cat3
+                    all_categories.append([bus_info['business_id'], bus_info['categories']])  # one column. format: cat1,cat2,cat3
                 else:
-                    all_categories.append(['NA'])
+                    all_categories.append([bus_info['business_id'], 'NA'])
                 all_hours.append(hours)   
                 all_data.append([
                                  bus_info['name'], bus_info['address'], bus_info['city'], 
@@ -48,9 +47,8 @@ def get_business_data():
                                  columns=['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
                                  index=row_id
                                 )
-        category_data = pd.DataFrame(
+        category_data = pd.DataFrame(  # index is numeric
                                  all_categories,
-                                 columns=['categories'],
-                                 index=row_id
+                                 columns=['business_id','categories'],
                                 )
         return all_data, time_data, category_data
