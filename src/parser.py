@@ -13,7 +13,12 @@ def get_business_data():
         all_categories = []
         row_id = []
         for obj in all_JSON:
-            temp_hours = {'Monday': 'x', 'Tuesday': 'x', 'Wednesday': 'x', 'Thursday': 'x', 'Friday': 'x', 'Saturday': 'x', 'Sunday': 'x'}
+            temp_hours = {
+                          'Monday': 'x', 'Tuesday': 'x',
+                          'Wednesday': 'x', 'Thursday': 'x',
+                          'Friday': 'x', 'Saturday': 'x',
+                          'Sunday': 'x'
+                         }
             bus_info = json.loads(all_JSON[i])
             if bus_info['is_open']:
                 # hours info
@@ -25,9 +30,10 @@ def get_business_data():
                     hours = ['NA','NA','NA','NA','NA','NA','NA']
                 # append all data
                 if isinstance(bus_info['categories'], str):
-                    all_categories.append([bus_info['business_id'], bus_info['categories']])  # one column. format: cat1,cat2,cat3
+                     # one column. format: cat1, cat2, cat3
+                    all_categories.append([bus_info['categories']])
                 else:
-                    all_categories.append([bus_info['business_id'], 'NA'])
+                    all_categories.append(['NA'])
                 all_hours.append(hours)   
                 all_data.append([
                                  bus_info['name'], bus_info['address'], bus_info['city'], 
@@ -49,6 +55,7 @@ def get_business_data():
                                 )
         category_data = pd.DataFrame(  # index is numeric
                                  all_categories,
-                                 columns=['business_id','categories'],
+                                 columns=['categories'],
+                                 index=row_id
                                 )
         return all_data, time_data, category_data
