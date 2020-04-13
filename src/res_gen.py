@@ -45,11 +45,18 @@ def get_place_ids(all_data_df, category_data_df, categories):
     selected_cats = category_data_df.loc[filtered_places_busids]
     return select_categories(selected_cats, categories)
 
-def select_ran_res(df, res_list):
+
+def select_ran_res(df, res_list, time_data_df):
     if len(res_list) != 0:
         rand_res = random.choice(res_list)
         new_df = df.iloc[[rand_res]]
+        times = time_data_df.loc[new_df.index[0]]
+
+        print("Store Name: ")
         print(new_df.name[0])
+        print("Store hours:")
+        for day, time in zip(['Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat', 'Sun'], times):
+            print(str(day) + ': ' + str(time))
     else:
         print("No restaurants found.")
 
@@ -78,12 +85,11 @@ def main():
     all_data_df = select_range(all_data_df, float(bounds[0]), float(bounds[1]))
     place_ids = get_place_ids(all_data_df, category_data_df, categories)
 
-    
     print("Enter 0 for a random restaurant, and 1 for a list of restaurants")
     choice = input()
     # TODO: Test on PA, Carnegie. #201, 1-indexed
     if int(choice) == 0:
-        select_ran_res(all_data_df, list(place_ids))
+        select_ran_res(all_data_df, list(place_ids), time_data_df)
     else:
         show_all_res(all_data_df, list(place_ids))
     
