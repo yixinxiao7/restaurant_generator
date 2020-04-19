@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import random
 
+from recommender import Recommender
 from dictionaries import states
 import parser
 
@@ -10,8 +11,10 @@ def select_location(df, state, city):
     state_acr = states[state]
     return df[(df.state == state_acr) & (df.city == city)]
 
+
 def select_range(df, lower_range, upper_range):
     return df[(df.stars >= lower_range) & (df.stars <= upper_range)]
+
 
 # returns lists of restaurants with any one of the desired categories.
 def select_categories(df, categories):
@@ -60,6 +63,8 @@ def select_ran_res(df, res_list, time_data_df):
     else:
         print("No restaurants found.")
 
+
+
 def show_all_res(df, res_list):
     if len(res_list) != 0:
         new_df = df.iloc[res_list]
@@ -67,6 +72,7 @@ def show_all_res(df, res_list):
             print(name)
     else:
         print("No restaurants found.")
+
 
 def main():
     # test
@@ -87,9 +93,13 @@ def main():
 
     print("Enter 0 for a random restaurant, and 1 for a list of restaurants")
     choice = input()
-    # TODO: Test on PA, Carnegie. #201, 1-indexed
     if int(choice) == 0:
         select_ran_res(all_data_df, list(place_ids), time_data_df)
+        print("See recommendation? <Y/N>")
+        recommendation = input()
+        if recommendation == "Y":
+            recommender = Recommender(all_data_df, list(place_ids))
+            recommender.print_random()
     else:
         show_all_res(all_data_df, list(place_ids))
     
